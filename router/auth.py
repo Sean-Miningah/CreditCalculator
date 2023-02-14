@@ -104,3 +104,11 @@ def refresh_token(response: Response, Authorize: AuthJWT = Depends()):
                         ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, False, 'lax')
     return {'access_token': access_token}
 
+
+@router.get('/logout', status_code=status.HTTP_200_OK)
+def logout(response: Response, Authorize: AuthJWT = Depends(), user_id: str = Depends(oauth2.require_user)):
+    Authorize.unset_jwt_cookies()
+    response.set_cookie('logged_in', '', -1)
+
+    return {'status': 'success'}
+
